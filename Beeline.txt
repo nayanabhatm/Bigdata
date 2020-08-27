@@ -1,0 +1,3 @@
+to start: beeline -u jdbc:hive2://quickstart.cloudera:10000 -n cloudera -p cloudera
+to quit: !quit
+help: !help //to see the different options

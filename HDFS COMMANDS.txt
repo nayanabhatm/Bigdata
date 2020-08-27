@@ -1,0 +1,450 @@
+login as: cloudera
+cloudera@192.168.252.128's password:
+Last login: Mon Jan 21 18:36:31 2019 from 192.168.234.1
+[cloudera@quickstart ~]$ ls
+cloudera-manager  eclipseScala                kerberos      Pictures               sbt                        Stop-HDFS.sh  workspace1
+cm_api.py         enterprise-deployment.json  lib           pig_1548732591528.log  spark-2.3.1-bin-hadoop2.6  Stop-HIVE.sh  zeppelin-0.7.3-bin-all
+derby.log         evenorodd.sh                metastore_db  pig_1548733222535.log  sqp.txt                    Stop-YARN.sh
+Desktop           express-deployment.json     Music         pig_1548814172798.log  start-all.sh               target
+Documents         flink-1.5.0                 orders1.java  pig_1548817949732.log  Start-HDFS.sh              Templates
+Downloads         IdeaProjects                orders2.java  project                Start-HIVE.sh              test.txt
+dvs               java                        orders.java   projects               Start-YARN.sh              Videos
+eclipse           kafka_2.11-0.10.2.1         parcels       Public                 stop-all.sh                workspace
+[cloudera@quickstart ~]$ sh start-all.sh
+datanode running as process 5035. Stop it first.
+Started Hadoop datanode (hadoop-hdfs-datanode):            [  OK  ]
+journalnode running as process 5162. Stop it first.
+Started Hadoop journalnode:                                [  OK  ]
+namenode running as process 5273. Stop it first.
+Started Hadoop namenode:                                   [  OK  ]
+secondarynamenode running as process 5403. Stop it first.
+Started Hadoop secondarynamenode:                          [  OK  ]
+Started Hadoop httpfs (hadoop-httpfs):                     [  OK  ]
+nodemanager running as process 5666. Stop it first.
+Started Hadoop nodemanager:                                [  OK  ]
+resourcemanager running as process 5783. Stop it first.
+Started Hadoop resourcemanager:                            [  OK  ]
+historyserver running as process 5983. Stop it first.
+Started Hadoop historyserver:                              [  OK  ]
+[cloudera@quickstart ~]$ cat start-all.sh
+sudo service hadoop-hdfs-datanode start
+sudo service hadoop-hdfs-journalnode start
+sudo service hadoop-hdfs-namenode start
+sudo service hadoop-hdfs-secondarynamenode start
+sudo service hadoop-httpfs start
+sudo service hadoop-yarn-nodemanager start
+sudo service hadoop-yarn-resourcemanager start
+sudo service hadoop-mapreduce-historyserver start
+[cloudera@quickstart ~]$ cat stop-all.sh
+sudo service hadoop-httpfs stop
+sudo service hadoop-hdfs-secondarynamenode stop
+sudo service hadoop-hdfs-namenode stop
+sudo service hadoop-hdfs-journalnode stop
+sudo service hadoop-hdfs-datanode stop
+sudo service hadoop-mapreduce-historyserver stop
+sudo service hadoop-yarn-resourcemanager stop
+sudo service hadoop-yarn-nodemanager stop
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$ sh Start-HIVE.sh
+Starting Hive Metastore (hive-metastore):                  [  OK  ]
+Started Hive Server2 (hive-server2):                       [  OK  ]
+[cloudera@quickstart ~]$ cat Start-HIVE.sh
+sudo service hive-metastore start
+sudo service hive-server2 start
+[cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> [cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$ cat /etc/hive/conf.dist/hive-log4j.properties
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Define some default values that can be overridden by system properties
+hive.log.threshold=ALL
+hive.root.logger=WARN,DRFA
+hive.log.dir=${java.io.tmpdir}/${user.name}
+hive.log.file=hive.log
+
+# Define the root logger to the system property "hadoop.root.logger".
+log4j.rootLogger=${hive.root.logger}, EventCounter
+
+# Logging Threshold
+log4j.threshold=${hive.log.threshold}
+
+#
+# Daily Rolling File Appender
+#
+# Use the PidDailyerRollingFileAppend class instead if you want to use separate log files
+# for different CLI session.
+#
+# log4j.appender.DRFA=org.apache.hadoop.hive.ql.log.PidDailyRollingFileAppender
+
+log4j.appender.DRFA=org.apache.log4j.DailyRollingFileAppender
+
+log4j.appender.DRFA.File=${hive.log.dir}/${hive.log.file}
+
+# Rollver at midnight
+log4j.appender.DRFA.DatePattern=.yyyy-MM-dd
+
+# 30-day backup
+#log4j.appender.DRFA.MaxBackupIndex=30
+log4j.appender.DRFA.layout=org.apache.log4j.PatternLayout
+
+# Pattern format: Date LogLevel LoggerName LogMessage
+#log4j.appender.DRFA.layout.ConversionPattern=%d{ISO8601} %p %c: %m%n
+# Debugging Pattern format
+log4j.appender.DRFA.layout.ConversionPattern=%d{ISO8601} %-5p [%t]: %c{2} (%F:%M(%L)) - %m%n
+
+
+#
+# console
+# Add "console" to rootlogger above if you want to use this
+#
+
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.target=System.err
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} [%t]: %p %c{2}: %m%n
+log4j.appender.console.encoding=UTF-8
+
+#custom logging levels
+#log4j.logger.xxx=DEBUG
+
+#
+# Event Counter Appender
+# Sends counts of logging messages at different severity levels to Hadoop Metrics.
+#
+log4j.appender.EventCounter=org.apache.hadoop.hive.shims.HiveEventCounter
+
+
+log4j.category.DataNucleus=ERROR,DRFA
+log4j.category.Datastore=ERROR,DRFA
+log4j.category.Datastore.Schema=ERROR,DRFA
+log4j.category.JPOX.Datastore=ERROR,DRFA
+log4j.category.JPOX.Plugin=ERROR,DRFA
+log4j.category.JPOX.MetaData=ERROR,DRFA
+log4j.category.JPOX.Query=ERROR,DRFA
+log4j.category.JPOX.General=ERROR,DRFA
+log4j.category.JPOX.Enhancer=ERROR,DRFA
+
+
+# Silence useless ZK logs
+log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=WARN,DRFA
+log4j.logger.org.apache.zookeeper.ClientCnxnSocketNIO=WARN,DRFA
+
+#custom logging levels
+log4j.logger.org.apache.hadoop.hive.ql.parse.SemanticAnalyzer=INFO
+log4j.logger.org.apache.hadoop.hive.ql.Driver=INFO
+log4j.logger.org.apache.hadoop.hive.ql.exec.mr.ExecDriver=INFO
+log4j.logger.org.apache.hadoop.hive.ql.exec.mr.MapRedTask=INFO
+log4j.logger.org.apache.hadoop.hive.ql.exec.mr.MapredLocalTask=INFO
+log4j.logger.org.apache.hadoop.hive.ql.exec.Task=INFO
+log4j.logger.org.apache.hadoop.hive.ql.session.SessionState=INFO
+[cloudera@quickstart ~]$ ls /usr
+bin  etc  games  include  java  lib  lib64  libexec  local  sbin  share  src  tmp
+[cloudera@quickstart ~]$ ls -l /usr
+total 140
+drwxrwxr-x.   2 root root 36864 Nov 26  2018 bin
+drwxr-xr-x.   2 root root  4096 Sep 23  2011 etc
+drwxr-xr-x.   2 root root  4096 Sep 23  2011 games
+drwxr-xr-x.  48 root root  4096 Jul  2  2018 include
+drwxr-xr-x    3 root root  4096 Jun 29  2018 java
+dr-xr-xr-x.  66 root root  4096 Jul  2  2018 lib
+dr-xr-xr-x.  77 root root 40960 Jul  6  2018 lib64
+drwxr-xr-x.  22 root root 12288 Jun 30  2018 libexec
+drwxr-xr-x.  15 root root  4096 Jul 19  2017 local
+dr-xr-xr-x.   2 root root 12288 Jul  2  2018 sbin
+drwxrwxr-x. 166 root root  4096 Jul  2  2018 share
+drwxr-xr-x.   4 root root  4096 Jul 19  2017 src
+lrwxrwxrwx.   1 root root    10 Jul 19  2017 tmp -> ../var/tmp
+[cloudera@quickstart ~]$ hadoop fs -ls /user/hive/warehouse
+Found 6 items
+drwxrwxrwx   - cloudera supergroup          0 2019-01-22 09:11 /user/hive/warehouse/dvs.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-28 07:50 /user/hive/warehouse/dvs_dec18.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:21 /user/hive/warehouse/dvs_jul19.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-20 19:32 /user/hive/warehouse/dvs_mar1.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-14 08:25 /user/hive/warehouse/learning.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-06 03:13 /user/hive/warehouse/test.db
+[cloudera@quickstart ~]$ cd /home/cloudera/dvs
+[cloudera@quickstart dvs]$ ls
+1987.csv         complex   emp1.csv  emp.tsv              json        people.csv     pigout         pigparam.txt  sqoop_param.txt  tup.txt
+bag.txt          c_out     emp3.csv  HDFS_directory       owners.csv  pets.csv       pigout1        sample1.json  std
+b_out            dept.csv  emp.csv   hive                 param.txt   pig            pigparam       sample.json   TempStatsStore
+bucketsdata.csv  d_out     emp.json  hive_assignment.csv  pass        piggybank.jar  pigparam1.txt  sample.xml    test.txt
+[cloudera@quickstart dvs]$ cat emp.csv
+7369,SMITH,CLERK,800.00,null,20
+7499,ALLEN,SALESMAN,1600.00,300.00,30
+7521,WARD,SALESMAN,1250.00,500.00,30
+7566,JONES,MANAGER,2975.00,null,20
+7654,MARTIN,SALESMAN,1250.00,1400.00,30
+7698,BLAKE,MANAGER,2850.00,null,30
+7782,CLARK,MANAGER,2450.00,null,10
+7788,SCOTT,ANALYST,3000.00,null,20
+7839,KING,PRESIDENT,5000.00,null,10
+7844,TURNER,SALESMAN,1500.00,0.00,30
+7876,ADAMS,CLERK,1100.00,null,20
+7900,JAMES,CLERK,950.00,null,30
+7902,FORD,ANALYST,3000.00,null,20
+7934,MILLER,CLERK,1300.00,null,10
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse
+Found 6 items
+drwxrwxrwx   - cloudera supergroup          0 2019-01-22 09:11 /user/hive/warehouse/dvs.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-28 07:50 /user/hive/warehouse/dvs_dec18.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:38 /user/hive/warehouse/dvs_jul19.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-20 19:32 /user/hive/warehouse/dvs_mar1.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-14 08:25 /user/hive/warehouse/learning.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-06 03:13 /user/hive/warehouse/test.db
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_jul19.db
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:38 /user/hive/warehouse/dvs_jul19.db/emp
+[cloudera@quickstart dvs]$ cat dept.csv
+10,ACCOUNTING,NEW YORK
+20,RESEARCH,DALLAS
+30,SALES,CHICAGO
+40,OPERATIONS,BOSTON
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_jul19.db
+Found 2 items
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:44 /user/hive/warehouse/dvs_jul19.db/dept
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:38 /user/hive/warehouse/dvs_jul19.db/emp
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_jul19.db/emp
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup        493 2019-08-08 20:47 /user/hive/warehouse/dvs_jul19.db/emp/emp.csv
+[cloudera@quickstart dvs]$
+
+login as: cloudera
+cloudera@192.168.252.128's password:
+Last login: Fri Aug  9 21:23:12 2019 from 192.168.252.1
+[cloudera@quickstart ~]$ hadoop fs -ls /user/hive/warehouse
+Found 7 items
+drwxrwxrwx   - cloudera supergroup          0 2019-01-22 09:11 /user/hive/wareho                                                                             use/dvs.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-28 07:50 /user/hive/wareho                                                                             use/dvs_dec18.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 21:33 /user/hive/wareho                                                                             use/dvs_hive.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:44 /user/hive/wareho                                                                             use/dvs_jul19.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-20 19:32 /user/hive/wareho                                                                             use/dvs_mar1.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-14 08:25 /user/hive/wareho                                                                             use/learning.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-06 03:13 /user/hive/wareho                                                                             use/test.db
+[cloudera@quickstart ~]$ ls
+cloudera-manager  eclipseScala                kerberos      Pictures               sbt                        Stop-HDFS.sh  workspace1
+cm_api.py         enterprise-deployment.json  lib           pig_1548732591528.log  spark-2.3.1-bin-hadoop2.6  Stop-HIVE.sh  zeppelin-0.7.3-bin-all
+derby.log         evenorodd.sh                metastore_db  pig_1548733222535.log  sqp.txt                    Stop-YARN.sh
+Desktop           express-deployment.json     Music         pig_1548814172798.log  start-all.sh               target
+Documents         flink-1.5.0                 orders1.java  pig_1548817949732.log  Start-HDFS.sh              Templates
+Downloads         IdeaProjects                orders2.java  project                Start-HIVE.sh              test.txt
+dvs               java                        orders.java   projects               Start-YARN.sh              Videos
+eclipse           kafka_2.11-0.10.2.1         parcels       Public                 stop-all.sh                workspace
+[cloudera@quickstart ~]$ cd dvs
+[cloudera@quickstart dvs]$ ls
+1987.csv         complex   emp1.csv  emp.tsv              json        people.csv     pigout         pigparam.txt  sqoop_param.txt  tup.txt
+bag.txt          c_out     emp3.csv  HDFS_directory       owners.csv  pets.csv       pigout1        sample1.json  std
+b_out            dept.csv  emp.csv   hive                 param.txt   pig            pigparam       sample.json   TempStatsStore
+bucketsdata.csv  d_out     emp.json  hive_assignment.csv  pass        piggybank.jar  pigparam1.txt  sample.xml    test.txt
+[cloudera@quickstart dvs]$ cat test.txt
+This is DVS Technologies
+This is Hadoop class
+Hadoop is hot technology
+Hadoop has so many modules
+Hadoop architecture is complex
+[cloudera@quickstart dvs]$ cat pets.csv
+nemo,fish
+fido,dog
+rex,dog
+paws,cat
+wiskers,cat
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/
+Found 7 items
+drwxrwxrwx   - cloudera supergroup          0 2019-01-22 09:11 /user/hive/warehouse/dvs.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-28 07:50 /user/hive/warehouse/dvs_dec18.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 21:40 /user/hive/warehouse/dvs_hive.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:44 /user/hive/warehouse/dvs_jul19.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-20 19:32 /user/hive/warehouse/dvs_mar1.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-14 08:25 /user/hive/warehouse/learning.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-06 03:13 /user/hive/warehouse/test.db
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 21:41 /user/hive/warehouse/dvs_hive.db/pets
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/pets
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:41 /user/hive/warehouse/dvs_hive.db/pets/pets.csv
+[cloudera@quickstart dvs]$ ls
+1987.csv         complex   emp1.csv  emp.tsv              json        people.csv     pigout         pigparam.txt  sqoop_param.txt  tup.txt
+bag.txt          c_out     emp3.csv  HDFS_directory       owners.csv  pets.csv       pigout1        sample1.json  std
+b_out            dept.csv  emp.csv   hive                 param.txt   pig            pigparam       sample.json   TempStatsStore
+bucketsdata.csv  d_out     emp.json  hive_assignment.csv  pass        piggybank.jar  pigparam1.txt  sample.xml    test.txt
+[cloudera@quickstart dvs]$ vi pets2.csv
+[cloudera@quickstart dvs]$ load from local inpath '/home/cloudera/dvs/pets2.csv'
+-bash: load: command not found
+[cloudera@quickstart dvs]$ load from local inpath '/home/cloudera/dvs/pets2.csv' into pets;
+-bash: load: command not found
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/pets
+Found 2 items
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:41 /user/hive/warehouse/dvs_hive.db/pets/pets.csv
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:57 /user/hive/warehouse/dvs_hive.db/pets/pets_copy_1.csv
+[cloudera@quickstart dvs]$ hadoop fs -mkdir emp_dir
+[cloudera@quickstart dvs]$ hadoop fs -ls
+Found 10 items
+drwxr-xr-x   - cloudera cloudera          0 2018-12-14 10:17 .sparkStaging
+drwxr-xr-x   - cloudera cloudera          0 2019-08-03 18:40 HDFS_Directory
+drwxr-xr-x   - cloudera cloudera          0 2019-08-02 18:38 HDFS_Directory2
+drwxr-xr-x   - cloudera cloudera          0 2019-01-26 18:51 _sqoop
+drwxr-xr-x   - cloudera cloudera          0 2019-01-13 20:15 dvs1
+-rw-r--r--   1 cloudera cloudera        493 2019-08-01 20:21 dvs_hadoop
+drwxr-xr-x   - cloudera cloudera          0 2019-08-01 20:38 dvs_hdfs
+drwxr-xr-x   - cloudera cloudera          0 2019-08-09 22:00 emp_dir
+drwxr-xr-x   - cloudera cloudera          0 2019-01-25 19:03 orders
+drwxr-xr-x   - cloudera cloudera          0 2019-01-25 19:22 orders1
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/pets
+Found 3 items
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:41 /user/hive/warehouse/dvs_hive.db/pets/pets.csv
+-rwxrwxrwx   1 cloudera supergroup          8 2019-08-09 22:01 /user/hive/warehouse/dvs_hive.db/pets/pets2.csv
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:57 /user/hive/warehouse/dvs_hive.db/pets/pets_copy_1.csv
+[cloudera@quickstart dvs]$ hadoop fs -ls
+Found 10 items
+drwxr-xr-x   - cloudera cloudera          0 2018-12-14 10:17 .sparkStaging
+drwxr-xr-x   - cloudera cloudera          0 2019-08-03 18:40 HDFS_Directory
+drwxr-xr-x   - cloudera cloudera          0 2019-08-02 18:38 HDFS_Directory2
+drwxr-xr-x   - cloudera cloudera          0 2019-01-26 18:51 _sqoop
+drwxr-xr-x   - cloudera cloudera          0 2019-01-13 20:15 dvs1
+-rw-r--r--   1 cloudera cloudera        493 2019-08-01 20:21 dvs_hadoop
+drwxr-xr-x   - cloudera cloudera          0 2019-08-01 20:38 dvs_hdfs
+drwxr-xr-x   - cloudera cloudera          0 2019-08-09 22:00 emp_dir
+drwxr-xr-x   - cloudera cloudera          0 2019-01-25 19:03 orders
+drwxr-xr-x   - cloudera cloudera          0 2019-01-25 19:22 orders1
+[cloudera@quickstart dvs]$ ls
+1987.csv         complex   emp1.csv  emp.tsv              json        people.csv  piggybank.jar  pigparam1.txt  sample.xml       test.txt
+bag.txt          c_out     emp3.csv  HDFS_directory       owners.csv  pets2.csv   pigout         pigparam.txt   sqoop_param.txt  tup.txt
+b_out            dept.csv  emp.csv   hive                 param.txt   pets.csv    pigout1        sample1.json   std
+bucketsdata.csv  d_out     emp.json  hive_assignment.csv  pass        pig         pigparam       sample.json    TempStatsStore
+[cloudera@quickstart dvs]$ hadoop fs -put emp.csv emp1.csv emp_dir
+[cloudera@quickstart dvs]$ hadoop fs -ls
+Found 10 items
+drwxr-xr-x   - cloudera cloudera          0 2018-12-14 10:17 .sparkStaging
+drwxr-xr-x   - cloudera cloudera          0 2019-08-03 18:40 HDFS_Directory
+drwxr-xr-x   - cloudera cloudera          0 2019-08-02 18:38 HDFS_Directory2
+drwxr-xr-x   - cloudera cloudera          0 2019-01-26 18:51 _sqoop
+drwxr-xr-x   - cloudera cloudera          0 2019-01-13 20:15 dvs1
+-rw-r--r--   1 cloudera cloudera        493 2019-08-01 20:21 dvs_hadoop
+drwxr-xr-x   - cloudera cloudera          0 2019-08-01 20:38 dvs_hdfs
+drwxr-xr-x   - cloudera cloudera          0 2019-08-09 22:01 emp_dir
+drwxr-xr-x   - cloudera cloudera          0 2019-01-25 19:03 orders
+drwxr-xr-x   - cloudera cloudera          0 2019-01-25 19:22 orders1
+[cloudera@quickstart dvs]$ hadoop fs -ls emp_dir
+Found 2 items
+-rw-r--r--   1 cloudera cloudera        493 2019-08-09 22:01 emp_dir/emp.csv
+-rw-r--r--   1 cloudera cloudera         99 2019-08-09 22:01 emp_dir/emp1.csv
+[cloudera@quickstart dvs]$ ls /user/cloudera
+ls: cannot access /user/cloudera: No such file or directory
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/cloudera/emp_dir
+Found 2 items
+-rw-r--r--   1 cloudera cloudera        493 2019-08-09 22:01 /user/cloudera/emp_dir/emp.csv
+-rw-r--r--   1 cloudera cloudera         99 2019-08-09 22:01 /user/cloudera/emp_dir/emp1.csv
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse
+Found 7 items
+drwxrwxrwx   - cloudera supergroup          0 2019-01-22 09:11 /user/hive/warehouse/dvs.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-28 07:50 /user/hive/warehouse/dvs_dec18.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 21:40 /user/hive/warehouse/dvs_hive.db
+drwxrwxrwx   - cloudera supergroup          0 2019-08-08 20:44 /user/hive/warehouse/dvs_jul19.db
+drwxrwxrwx   - cloudera supergroup          0 2019-01-20 19:32 /user/hive/warehouse/dvs_mar1.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-14 08:25 /user/hive/warehouse/learning.db
+drwxrwxrwx   - cloudera supergroup          0 2018-12-06 03:13 /user/hive/warehouse/test.db
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive
+ls: `/user/hive/warehouse/dvs_hive': No such file or directory
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db
+Found 1 items
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 22:01 /user/hive/warehouse/dvs_hive.db/pets
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/cloudera/emp_dir
+Found 2 items
+-rw-r--r--   1 cloudera cloudera        493 2019-08-09 22:01 /user/cloudera/emp_dir/emp.csv
+-rw-r--r--   1 cloudera cloudera         99 2019-08-09 22:01 /user/cloudera/emp_dir/emp1.csv
+[cloudera@quickstart dvs]$
+[cloudera@quickstart dvs]$
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db
+Found 2 items
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter
+drwxrwxrwx   - cloudera supergroup          0 2019-08-09 22:01 /user/hive/warehouse/dvs_hive.db/pets
+[cloudera@quickstart dvs]$ hadoop fs -cat /user/hive/warehouse/dvs_hive.db/emp_filter
+cat: `/user/hive/warehouse/dvs_hive.db/emp_filter': Is a directory
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/pets
+Found 3 items
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:41 /user/hive/warehouse/dvs_hive.db/pets/pets.csv
+-rwxrwxrwx   1 cloudera supergroup          8 2019-08-09 22:01 /user/hive/warehouse/dvs_hive.db/pets/pets2.csv
+-rwxrwxrwx   1 cloudera supergroup         48 2019-08-09 21:57 /user/hive/warehouse/dvs_hive.db/pets/pets_copy_1.csv
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -cat /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+ALLEN
+WARD
+MARTIN
+BLAKE
+TURNER
+JAMES
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -cat /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+ALLEN
+WARD
+MARTIN
+BLAKE
+TURNER
+JAMES
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -cat /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+ALLEN
+WARD
+MARTIN
+BLAKE
+TURNER
+JAMES
+[cloudera@quickstart dvs]$ hadoop fs -cat /user/hive/warehouse/dvs_hive.db/emp_filter2/000000_0
+CLARK
+KING
+MILLER
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter/
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter2/
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         18 2019-08-09 22:24 /user/hive/warehouse/dvs_hive.db/emp_filter2/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp_filter*
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         18 2019-08-09 22:24 /user/hive/warehouse/dvs_hive.db/emp_filter2/000000_0
+[cloudera@quickstart dvs]$ hadoop fs -ls /user/hive/warehouse/dvs_hive.db/emp*
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         37 2019-08-09 22:21 /user/hive/warehouse/dvs_hive.db/emp_filter/000000_0
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup         18 2019-08-09 22:24 /user/hive/warehouse/dvs_hive.db/emp_filter2/000000_0
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup        108 2019-08-09 22:31 /user/hive/warehouse/dvs_hive.db/emp_join/000000_0
+[cloudera@quickstart dvs]$

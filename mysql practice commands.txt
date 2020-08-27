@@ -1,0 +1,208 @@
+[cloudera@quickstart ~]$ sudo service sqoop-metastore start
+[cloudera@quickstart ~]$ sudo service sqoop2-server start
+Starting Sqoop Server:                                     [  OK  ]
+Sqoop home directory: /usr/lib/sqoop2
+Setting SQOOP_HTTP_PORT:     12000
+Setting SQOOP_ADMIN_PORT:     12001
+Using   CATALINA_OPTS:       -Xmx1024m
+Adding to CATALINA_OPTS:    -Dsqoop.http.port=12000 -Dsqoop.admin.port=12001
+Using CATALINA_BASE:   /var/lib/sqoop2/tomcat-deployment
+Using CATALINA_HOME:   /usr/lib/bigtop-tomcat
+Using CATALINA_TMPDIR: /var/tmp/sqoop2
+Using JRE_HOME:        /usr/java/jdk1.8.0_171
+Using CLASSPATH:       /usr/lib/bigtop-tomcat/bin/bootstrap.jar
+Using CATALINA_PID:    /var/run/sqoop2/sqoop-server-sqoop2.pid
+[cloudera@quickstart ~]$ sudo jps
+5121 RunJar
+4514 ResourceManager
+4330 Bootstrap
+10286 Bootstrap
+10414 Jps
+3857 DataNode
+4082 NameNode
+2452 RunJar
+5269 RunJar
+4405 NodeManager
+4182 SecondaryNameNode
+4670 JobHistoryServer
+3967 JournalNode
+10047 Sqoop
+[cloudera@quickstart ~]$ ps -ef|grep hive
+cloudera  2452  3744  0 08:02 pts/0    00:01:00 /usr/java/jdk1.8.0_171/bin/java -Xmx256m -Dhadoop.log.dir=/usr/lib/hadoop/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir=/usr/lib/hadoop -Dhadoop.id.str= -Dhadoop.root.logger=INFO,console -Djava.library.path=/usr/lib/hadoop/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=INFO,NullAppender org.apache.hadoop.util.RunJar /usr/lib/hive/lib/hive-cli-1.1.0-cdh5.15.0.jar org.apache.hadoop.hive.cli.CliDriver --hiveconf hive.aux.jars.path=file:///usr/lib/hive/auxlib/hive-exec-1.1.0-cdh5.15.0-core.jar,file:///usr/lib/hive/auxlib/hive-exec-core.jar
+hive      5121     1  0 Aug18 ?        00:02:55 /usr/java/jdk1.8.0_171/bin/java -Xmx256m -Dhive.log.dir=/var/log/hive -Dhive.log.file=hive-metastore.log -Dhive.log.threshold=INFO -Dhadoop.log.dir=/usr/lib/hadoop/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir=/usr/lib/hadoop -Dhadoop.id.str= -Dhadoop.root.logger=INFO,console -Djava.library.path=/usr/lib/hadoop/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=INFO,NullAppender org.apache.hadoop.util.RunJar /usr/lib/hive/lib/hive-service-1.1.0-cdh5.15.0.jar org.apache.hadoop.hive.metastore.HiveMetaStore
+hive      5269     1  0 Aug18 ?        00:02:26 /usr/java/jdk1.8.0_171/bin/java -Xmx256m -Dhive.log.dir=/var/log/hive -Dhive.log.file=hive-server2.log -Dhive.log.threshold=INFO -Dhadoop.log.dir=/usr/lib/hadoop/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir=/usr/lib/hadoop -Dhadoop.id.str= -Dhadoop.root.logger=INFO,console -Djava.library.path=/usr/lib/hadoop/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=INFO,NullAppender org.apache.hadoop.util.RunJar /usr/lib/hive/lib/hive-service-1.1.0-cdh5.15.0.jar org.apache.hive.service.server.HiveServer2 --hiveconf hive.aux.jars.path=file:///usr/lib/hive/auxlib/hive-exec-1.1.0-cdh5.15.0-core.jar,file:///usr/lib/hive/auxlib/hive-exec-core.jar
+cloudera  9751 26804  0 19:45 pts/1    00:00:00 vim hive_basic.txt
+cloudera 10428  9994  0 19:57 pts/2    00:00:00 grep hive
+[cloudera@quickstart ~]$ 
+[cloudera@quickstart ~]$ 
+[cloudera@quickstart ~]$ cls
+bash: cls: command not found
+[cloudera@quickstart ~]$ clear
+
+[cloudera@quickstart ~]$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 90
+Server version: 5.1.73 Source distribution
+
+Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show tables;
+ERROR 1046 (3D000): No database selected
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| cm                 |
+| ecommerce          |
+| firehose           |
+| hive_metastore     |
+| hue                |
+| metastore          |
+| mysql              |
+| nav                |
+| navms              |
+| oozie              |
+| retail_db          |
+| rman               |
+| sentry             |
++--------------------+
+14 rows in set (0.03 sec)
+
+mysql> use retail_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++---------------------+
+| Tables_in_retail_db |
++---------------------+
+| categories          |
+| customers           |
+| departments         |
+| order_items         |
+| orders              |
+| orders1             |
+| orders2             |
+| products            |
++---------------------+
+8 rows in set (0.00 sec)
+
+mysql> select current database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> select * from orders1;
++----------+---------------------+-------------------+-----------------+
+| order_id | order_date          | order_customer_id | order_status    |
++----------+---------------------+-------------------+-----------------+
+|        1 | 2013-07-25 00:00:00 |             11599 | CLOSED          |
+|        2 | 2013-07-25 00:00:00 |               256 | PENDING_PAYMENT |
+|        3 | 2013-07-25 00:00:00 |             12111 | COMPLETE        |
+|        4 | 2013-07-25 00:00:00 |              8827 | CLOSED          |
+|        5 | 2013-07-25 00:00:00 |             11318 | COMPLETE        |
+|        6 | 2013-07-25 00:00:00 |              7130 | COMPLETE        |
+|        7 | 2013-07-25 00:00:00 |              4530 | COMPLETE        |
+|        8 | 2013-07-25 00:00:00 |              2911 | PROCESSING      |
+|        9 | 2013-07-25 00:00:00 |              5657 | PENDING_PAYMENT |
+|       10 | 2013-07-25 00:00:00 |              5648 | PENDING_PAYMENT |
+|       11 | 2013-07-25 00:00:00 |               918 | PAYMENT_REVIEW  |
+|       12 | 2013-07-25 00:00:00 |              1837 | CLOSED          |
+|       13 | 2013-07-25 00:00:00 |              9149 | PENDING_PAYMENT |
+|       14 | 2013-07-25 00:00:00 |              9842 | PROCESSING      |
+|       15 | 2013-07-25 00:00:00 |              2568 | COMPLETE        |
+|       16 | 2013-07-25 00:00:00 |              7276 | PENDING_PAYMENT |
+|       17 | 2013-07-25 00:00:00 |              2667 | COMPLETE        |
+|       18 | 2013-07-25 00:00:00 |              1205 | CLOSED          |
+|       19 | 2013-07-25 00:00:00 |              9488 | PENDING_PAYMENT |
+|       20 | 2013-07-25 00:00:00 |              9198 | PROCESSING      |
+|       21 | 2013-07-25 00:00:00 |              2711 | PENDING         |
+|       22 | 2013-07-25 00:00:00 |               333 | COMPLETE        |
+|       23 | 2013-07-25 00:00:00 |              4367 | PENDING_PAYMENT |
+|       24 | 2013-07-25 00:00:00 |             11441 | CLOSED          |
+|       25 | 2013-07-25 00:00:00 |              9503 | CLOSED          |
+|       26 | 2013-07-25 00:00:00 |              7562 | COMPLETE        |
+|       27 | 2013-07-25 00:00:00 |              3241 | PENDING_PAYMENT |
+|       28 | 2013-07-25 00:00:00 |               656 | COMPLETE        |
+|       29 | 2013-07-25 00:00:00 |               196 | PROCESSING      |
+|       30 | 2013-07-25 00:00:00 |             10039 | PENDING_PAYMENT |
+|       31 | 2013-07-25 00:00:00 |              6983 | PAYMENT_REVIEW  |
+|       32 | 2013-07-25 00:00:00 |              3960 | COMPLETE        |
+|       33 | 2013-07-25 00:00:00 |              5793 | PENDING_PAYMENT |
+|       34 | 2013-07-25 00:00:00 |              4189 | PROCESSING      |
+|       35 | 2013-07-25 00:00:00 |              4840 | COMPLETE        |
+|       36 | 2013-07-25 00:00:00 |              5649 | PENDING         |
+|       37 | 2013-07-25 00:00:00 |              5863 | CLOSED          |
+|       38 | 2013-07-25 00:00:00 |             11586 | PROCESSING      |
+|       39 | 2013-07-25 00:00:00 |              8214 | PENDING         |
+|       40 | 2013-07-25 00:00:00 |             12092 | PENDING_PAYMENT |
+|       41 | 2013-07-25 00:00:00 |              8136 | PENDING_PAYMENT |
+|       42 | 2013-07-25 00:00:00 |              9776 | PENDING         |
+|       43 | 2013-07-25 00:00:00 |              7776 | PENDING_PAYMENT |
+|       44 | 2013-07-25 00:00:00 |             10500 | PENDING         |
+|       45 | 2013-07-25 00:00:00 |              2636 | COMPLETE        |
+|       46 | 2013-07-25 00:00:00 |              1549 | ON_HOLD         |
+|       47 | 2013-07-25 00:00:00 |              8487 | PENDING_PAYMENT |
+|       48 | 2013-07-25 00:00:00 |             12186 | PROCESSING      |
+|       49 | 2013-07-25 00:00:00 |              1871 | PENDING         |
+|       50 | 2013-07-25 00:00:00 |              5225 | CANCELED        |
+|       51 | 2013-07-25 00:00:00 |             12271 | CLOSED          |
+|       52 | 2013-07-25 00:00:00 |              5126 | PENDING_PAYMENT |
+|       53 | 2013-07-25 00:00:00 |              4701 | PROCESSING      |
+|       54 | 2013-07-25 00:00:00 |             10628 | PENDING_PAYMENT |
+|       55 | 2013-07-25 00:00:00 |              2052 | PENDING         |
+|       56 | 2013-07-25 00:00:00 |             10519 | COMPLETE        |
+|       57 | 2013-07-25 00:00:00 |              7073 | CLOSED          |
+|       58 | 2013-07-25 00:00:00 |              9213 | PENDING_PAYMENT |
+|       59 | 2013-07-25 00:00:00 |             11644 | PENDING_PAYMENT |
+|       60 | 2013-07-25 00:00:00 |              8365 | PENDING_PAYMENT |
+|       61 | 2013-07-25 00:00:00 |              4791 | CLOSED          |
+|       62 | 2013-07-25 00:00:00 |              9111 | CLOSED          |
+|       63 | 2013-07-25 00:00:00 |              1148 | COMPLETE        |
+|       64 | 2013-07-25 00:00:00 |              5579 | PENDING_PAYMENT |
+|       65 | 2013-07-25 00:00:00 |              5903 | COMPLETE        |
+|       66 | 2013-07-25 00:00:00 |              1792 | ON_HOLD         |
+|       67 | 2013-07-25 00:00:00 |              1406 | COMPLETE        |
+|       68 | 2013-07-25 00:00:00 |              4320 | PENDING         |
+|       69 | 2013-07-25 00:00:00 |              2821 | SUSPECTED_FRAUD |
+|       70 | 2013-07-25 00:00:00 |             11809 | PENDING_PAYMENT |
+|       71 | 2013-07-25 00:00:00 |              8646 | COMPLETE        |
+|       72 | 2013-07-25 00:00:00 |              4349 | COMPLETE        |
+|       73 | 2013-07-25 00:00:00 |              8504 | PENDING_PAYMENT |
+|       74 | 2013-07-25 00:00:00 |               662 | PENDING_PAYMENT |
+|       75 | 2013-07-25 00:00:00 |              2505 | PENDING_PAYMENT |
+|       76 | 2013-07-25 00:00:00 |              6898 | COMPLETE        |
+|       77 | 2013-07-25 00:00:00 |              7915 | PENDING_PAYMENT |
+|       78 | 2013-07-25 00:00:00 |              8619 | PAYMENT_REVIEW  |
+|       79 | 2013-07-25 00:00:00 |              7327 | PENDING_PAYMENT |
+|       80 | 2013-07-25 00:00:00 |              3007 | COMPLETE        |
+|       81 | 2013-07-25 00:00:00 |               674 | PROCESSING      |
+|       82 | 2013-07-25 00:00:00 |              3566 | PENDING_PAYMENT |
+|       83 | 2013-07-25 00:00:00 |              1265 | COMPLETE        |
+|       84 | 2013-07-25 00:00:00 |              6789 | PROCESSING      |
+|       85 | 2013-07-25 00:00:00 |              1485 | PENDING         |
+|       86 | 2013-07-25 00:00:00 |              6680 | PENDING_PAYMENT |
+|       87 | 2013-07-25 00:00:00 |              3065 | CLOSED          |
+|       88 | 2013-07-25 00:00:00 |              3809 | COMPLETE        |
+|       89 | 2013-07-25 00:00:00 |               824 | ON_HOLD         |
+|       90 | 2013-07-25 00:00:00 |              9131 | CLOSED          |
+|       91 | 2013-07-25 00:00:00 |              8912 | COMPLETE        |
+|       92 | 2013-07-25 00:00:00 |              6932 | COMPLETE        |
+|       93 | 2013-07-25 00:00:00 |              2256 | PENDING_PAYMENT |
+|       94 | 2013-07-25 00:00:00 |             11589 | PROCESSING      |
+|       95 | 2013-07-25 00:00:00 |              9032 | COMPLETE        |
+|       96 | 2013-07-25 00:00:00 |              8683 | PENDING         |
+|       97 | 2013-07-25 00:00:00 |             10784 | PENDING         |
+|       98 | 2013-07-25 00:00:00 |              5243 | COMPLETE        |
+|       99 | 2013-07-25 00:00:00 |             11542 | PENDING_PAYMENT |
+|      100 | 2013-07-25 00:00:00 |             12131 | PROCESSING      |
++----------+---------------------+-------------------+-----------------+
+100 rows in set (0.00 sec)
+
+mysql> 

@@ -1,0 +1,126 @@
+[cloudera@quickstart ~]$ sh start-all.sh 
+starting datanode, logging to /var/log/hadoop-hdfs/hadoop-hdfs-datanode-quickstart.cloudera.out
+Started Hadoop datanode (hadoop-hdfs-datanode):            [  OK  ]
+starting journalnode, logging to /var/log/hadoop-hdfs/hadoop-hdfs-journalnode-quickstart.cloudera.out
+Started Hadoop journalnode:                                [  OK  ]
+starting namenode, logging to /var/log/hadoop-hdfs/hadoop-hdfs-namenode-quickstart.cloudera.out
+Started Hadoop namenode:                                   [  OK  ]
+starting secondarynamenode, logging to /var/log/hadoop-hdfs/hadoop-hdfs-secondarynamenode-quickstart.cloudera.out
+Started Hadoop secondarynamenode:                          [  OK  ]
+Started Hadoop httpfs (hadoop-httpfs):                     [  OK  ]
+starting nodemanager, logging to /var/log/hadoop-yarn/yarn-yarn-nodemanager-quickstart.cloudera.out
+Started Hadoop nodemanager:                                [  OK  ]
+starting resourcemanager, logging to /var/log/hadoop-yarn/yarn-yarn-resourcemanager-quickstart.cloudera.out
+Started Hadoop resourcemanager:                            [  OK  ]
+starting historyserver, logging to /var/log/hadoop-mapreduce/mapred-mapred-historyserver-quickstart.cloudera.out
+Started Hadoop historyserver:                              [  OK  ]
+[cloudera@quickstart ~]$ sh Start-HIVE.sh 
+Starting Hive Metastore (hive-metastore):                  [  OK  ]
+Started Hive Server2 (hive-server2):                       [  OK  ]
+[cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> add jar /home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar;
+Added [/home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar] to class path
+Added resources: [/home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar]
+hive> use dvs;
+OK
+Time taken: 0.87 seconds
+hive> add jar /home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar;
+Added [/home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar] to class path
+Added resources: [/home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar]
+hive> list jars;
+/usr/lib/hive/lib/hive-contrib.jar
+/home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar
+hive> show tables;
+OK
+assignment_olympics_table1
+assignment_olympics_table2
+assignment_olympics_table3
+assignment_olympics_tmp1
+bucket_ass_1
+bucket_tmp1
+dept
+emp
+emp_wl_et
+orders
+positiveornegativetable
+uppercasetest
+Time taken: 0.461 seconds, Fetched: 12 row(s)
+hive> select * from uppercasetest;
+OK
+NAME123
+name123
+Time taken: 1.125 seconds, Fetched: 2 row(s)
+hive> create function toupperfuncsep12 as 'org.udf.ToUpperUDF';
+OK
+Time taken: 0.166 seconds
+hive> set hive.cli
+hive.cli.errors.ignore            hive.cli.pretty.output.num.cols   hive.cli.print.current.db         hive.cli.print.header             hive.cli.prompt                   
+hive.client.stats.counters        hive.client.stats.publishers      
+hive> set hive.cli.print.
+hive.cli.print.current.db   hive.cli.print.header       
+hive> set hive.cli.print.header=true;
+hive> select * from uppercasetest;
+OK
+uppercasetest.test
+NAME123
+name123
+Time taken: 0.12 seconds, Fetched: 2 row(s)
+hive> select test,toupperfuncsep12(test) as uppertest from uppercasetest;
+OK
+test	uppertest
+NAME123	NAME123
+name123	NAME123
+Time taken: 0.176 seconds, Fetched: 2 row(s)
+hive> add jar /home/cloudera/Desktop/UDF_jar/EvenOrOdd.jar;
+/home/cloudera/Desktop/UDF_jar/EvenOrOdd.jar does not exist
+Query returned non-zero code: 1, cause: /home/cloudera/Desktop/UDF_jar/EvenOrOdd.jar does not exist
+hive> add jar /home/cloudera/Desktop/UDF_jars/EvenOrOdd.jar;
+Added [/home/cloudera/Desktop/UDF_jars/EvenOrOdd.jar] to class path
+Added resources: [/home/cloudera/Desktop/UDF_jars/EvenOrOdd.jar]
+hive> list jars;
+/home/cloudera/Desktop/UDF_jars/EvenOrOdd.jar
+/usr/lib/hive/lib/hive-contrib.jar
+/home/cloudera/Desktop/UDF_jars/ToUpperUDF.jar
+hive> show tables;
+OK
+tab_name
+assignment_olympics_table1
+assignment_olympics_table2
+assignment_olympics_table3
+assignment_olympics_tmp1
+bucket_ass_1
+bucket_tmp1
+dept
+emp
+emp_wl_et
+orders
+positiveornegativetable
+uppercasetest
+Time taken: 0.033 seconds, Fetched: 12 row(s)
+hive> select * from uppercasetest;
+OK
+uppercasetest.test
+NAME123
+name123
+Time taken: 0.11 seconds, Fetched: 2 row(s)
+hive> select * from positiveornegativetable;
+OK
+positiveornegativetable.a
+1
+-99
+88
+Time taken: 0.109 seconds, Fetched: 3 row(s)
+hive> create function evenorodd_func as 'org.udf.EvenOrOdd';
+OK
+Time taken: 0.032 seconds
+hive> select a,evenorodd_func(a) as b from positiveornegativetable;
+OK
+a	b
+1	Odd
+-99	Odd
+88	Even
+Time taken: 0.104 seconds, Fetched: 3 row(s)
+hive> 
